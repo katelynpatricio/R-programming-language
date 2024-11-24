@@ -1,0 +1,48 @@
+#This code analyzes movie profitability, comparing profits by genre, runtime, and budget while testing whether low-budget, poorly-rated movies can still be profitable.
+
+setwd("/Users/kaytuhlinn/Downloads")
+
+#1. Do movies make money on average? How are you going to figure this out?
+  
+movies <- read.csv("movie_dataset.csv", header=TRUE)
+
+movies$profit <- movies$revenue - movies$budget #Create a new column that reflects how much each movie makes
+
+avg_profit <- t.test(movies$profit, mu = 0, na.rm = TRUE)
+
+print(avg_profit)
+
+#2. Do action movies cost more than other movie genres? Do they make more money on average? 
+  
+movies$mv_action <- grepl("Action",movies$genres) #Utilize the function grepl to find instances of "Action" found in movie genres
+
+action_profit <- t.test(movies$profit ~ movies$mv_action, na.rm = TRUE)
+
+print(action_profit)
+
+action_cost <- t.test(movies$budget ~ movies$mv_action, na.rm = TRUE)
+
+print(action_cost)
+
+#3. Are long movies (over 2 hours) more or less profitable than shorter movies?
+
+movies$mv_long <- movies$runtime > 120 #Create a new column that filters movies with a run time of longer than 120 minutes.
+
+mv_length <- t.test(movies$profit ~ movies$mv_long, na.rm = TRUE)
+
+print(mv_length)
+  
+#4. Is making bad movies but cheaply a possible path to riches?
+
+#Create new variables to find the mean of movie budget and voter average
+votes <- mean(movies$vote_average, na.rm = TRUE)
+mean_budget <- mean(movies$budget, na.rm = TRUE)
+
+#Create subset to get low budget and low voter average to indicate bad/poorly made movie
+bad_movies <- subset(movies, vote_average < votes & budget < mean_budget) #Filter data set where both conditions are true
+
+bad_movies$profit <- bad_movies$revenue - bad_movies$budget
+
+bad_mv_profit <- t.test(bad_movies$profit, mu = 0, na.rm = TRUE)
+
+print(bad_mv_profit)
