@@ -1,0 +1,70 @@
+---
+title: "Final Assignment: Does hard work matter?"
+author: "Katelyn Patricio"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(readr)
+setwd("/Users/kaytuhlinn/Downloads")
+data <- read.csv("els_small_example.csv")
+```
+
+### 1. Are there differences in college completion (four_deg) between sex/race groups? Are there differences in effort?
+
+#### Looking at the t test between sex, there is not much of a difference between men and women with women only slightly higher. It seems gender is not statistically significant in terms of completing a four year degree. In terms of comparing race, the outcome is similar with race not having such an impact on completing a four year degree with only Asians displaying marginal significance. 
+
+```{r}
+# The differences between gender on completing a four year degree
+t.test(four_deg ~ male, data = data)
+
+# Difference in completing a four year degree between races
+fd_model <- lm(four_deg ~ asian + black + hispanic + white + other, data = data)
+summary(fd_model)
+```
+
+#### Looking at effort between sex, women seem to put in more effort than men. There is a significant difference between these two groups and it is displayed through a very small p-value as well as men being substantially lower than the mean compared to women. In terms of comparing races, the outcome was similar to those found in its impact in completing a four year degree. The only marginally significant group were black people as the p-value is very low. 
+
+
+```{r}
+# The differences between gender on effort
+t.test(steffort ~ male, data = data)
+
+# Difference in effort between races
+model_steffort <- lm(steffort ~ asian + black + hispanic + other + white, data = data)
+summary(model_steffort)
+```
+
+### 2. Are any differences you find in college completion explained by high school effort? Socioeconomic status?
+
+#### Observing the comparison between highschool effort and college completion, effort seems to have a significant impact on completing a four year degree. According to coefficients, for every one unit increase in effort, the probability of graduating college increases. Furthermore, looking at how socioeconomic status impact college completion, the outcome is the same. Is it significanlty significant as for each one unit increase of SES, the probability of graduating college increases. 
+
+```{r}
+#Data compares the affects effort has in completing a four year degree
+model_steffort <- lm(four_deg ~ steffort, data = data)
+summary(model_steffort)
+  
+#Comparing how socioeconomic status affect completing college
+model_ses <- lm(four_deg ~ SES, data = data)
+summary(model_ses)
+```
+
+### 3. Are these factors as important once you enter college, or is it just relevant to getting in?
+
+#### Those who are currently in a four year degree, race does not have any significance. On the other hand, SES and effort are statistically significant predictors while gender was only marginally significant with males being more likely to be in a 4 year degree. 
+
+#### With two year degrees, many of these factors are not significant with gender having slight influence as men are less likely to be in a two-year degree compared to women.
+
+#### These findings indicate that race overall has no considerable influence once you are in college while factors such as SES and effort are only significant in those currently in a four year degree. In both instances, gender indicates men are more likely to be enrolled in a four year degree than women. 
+
+```{r}
+#Looking at how these variables impacts those currently in a four year degree
+model_curr_four <- lm(cur_4 ~ SES + steffort + male + asian + black + hispanic + white + other, data = data)
+summary(model_curr_four)
+
+#Looking at how these variables impacts those currently in a two year degree
+model_curr_two <- lm(cur_2 ~ SES + steffort + male + asian + black + hispanic + white + other, data = data)
+summary(model_curr_two)
+```
+
