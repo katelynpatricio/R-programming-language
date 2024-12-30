@@ -1,9 +1,4 @@
----
-title: "Final Assignment: Does hard work matter?"
-author: "Katelyn Patricio"
-date: "`r Sys.Date()`"
-output: html_document
----
+#This file examines whether hard work, alongside socioeconomic status, gender, and race, significantly impacts college completion and enrollment.
 
 ```{r}
 library(readr)
